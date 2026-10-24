@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fiesta de Disfraces</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #14183a;
+    --bg2: #1f2552;
+    --card: #252c60;
+    --line: #3b4489;
+    --text: #f4f6ff;
+    --muted: #b4bbe6;
+    --orange: #ff8a1f;
+    --orange2: #ffb347;
+    --green: #7cf29a;
+    --pink: #ff5c8a;
+    --radius: 18px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    font-family: 'Nunito', system-ui, sans-serif;
+    color: var(--text);
+    background:
+      radial-gradient(1200px 600px at 80% -10%, #3a3f9a 0%, transparent 60%),
+      radial-gradient(900px 500px at -10% 10%, #5a2a6e 0%, transparent 60%),
+      var(--bg);
+    min-height: 100vh;
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px 64px; }
+
+  header { text-align: center; padding: 40px 0 20px; position: relative; }
+  .moon {
+    width: 84px; height: 84px; border-radius: 50%; margin: 0 auto 8px;
+    background: radial-gradient(circle at 35% 35%, #fff6d6, #ffd36b 60%, #f0a830);
+    box-shadow: 0 0 50px 6px rgba(255, 200, 90, .3);
+    display: grid; place-items: center; font-size: 40px;
+    animation: float 5s ease-in-out infinite;
+  }
+  @keyframes float { 50% { transform: translateY(-8px) rotate(-4deg); } }
+  h1 {
+    font-family: 'Lilita One', 'Nunito', sans-serif; font-weight: 400; letter-spacing: 1px;
+    font-size: clamp(40px, 9vw, 72px); margin: 6px 0 4px; line-height: 1;
+    background: linear-gradient(180deg, var(--orange2), var(--orange));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    text-shadow: 0 6px 30px rgba(255, 138, 31, .25);
+  }
+  .subtitle { color: var(--muted); margin: 0; font-size: 18px; }
+
+  nav {
+    display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;
+    margin: 24px 0 28px; position: sticky; top: 0; z-index: 5;
+    padding: 10px 0;
+  }
+  nav button {
+    font: inherit; font-weight: 800; cursor: pointer; border: 1px solid var(--line);
+    background: var(--bg2); color: var(--muted); padding: 10px 18px; border-radius: 999px;
+    transition: .15s;
+  }
+  nav button:hover { color: var(--text); border-color: var(--orange); }
+  nav button.active { background: var(--orange); color: #2a1200; border-color: var(--orange); }
+
+  .panel { display: none; animation: fade .25s ease; }
+  .panel.active { display: block; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } }
+
+  .notice {
+    background: rgba(255, 138, 31, .12); border: 1px dashed var(--orange);
+    color: var(--orange2); padding: 12px 16px; border-radius: 12px; margin-bottom: 20px; text-align: center;
+  }
+
+  /* Inscripción */
+  .form-card {
+    max-width: 480px; margin: 0 auto; background: var(--card); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 28px; box-shadow: 0 20px 60px rgba(0,0,0,.35);
+  }
+  .form-card h2 { margin: 0 0 4px; font-size: 26px; }
+  .form-card p { margin: 0 0 20px; color: var(--muted); }
+  label { display: block; font-weight: 800; margin: 14px 0 6px; }
+  input, select {
+    width: 100%; font: inherit; font-size: 17px; color: var(--text);
+    background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px;
+  }
+  select { appearance: none; cursor: pointer; padding-right: 40px;
+    background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+    background-position: calc(100% - 20px) 50%, calc(100% - 14px) 50%; background-size: 6px 6px; background-repeat: no-repeat; }
+  select:invalid { color: var(--muted); }
+  select option { color: var(--text); background: var(--bg); }
+  input:focus, select:focus { outline: 2px solid var(--orange); border-color: transparent; }
+  .btn {
+    font: inherit; font-weight: 900; font-size: 17px; cursor: pointer; border: 0;
+    background: linear-gradient(180deg, var(--orange2), var(--orange)); color: #2a1200;
+    padding: 14px 20px; border-radius: 14px; width: 100%; margin-top: 22px;
+    box-shadow: 0 8px 24px rgba(255, 138, 31, .3); transition: transform .1s;
+  }
+  .btn:active { transform: scale(.98); }
+  .btn:disabled { opacity: .6; cursor: wait; }
+
+  /* Galería */
+  .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 18px; }
+  .toolbar input { flex: 1 1 220px; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 18px; }
+  .chip {
+    font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; padding: 6px 12px; border-radius: 999px;
+    border: 1px solid var(--line); background: transparent; color: var(--muted);
+  }
+  .chip.active { background: var(--line); color: var(--text); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 20px; display: flex; flex-direction: column; gap: 6px; position: relative;
+    transition: transform .15s, border-color .15s;
+  }
+  .card:hover { transform: translateY(-3px); }
+  .card.voted { border-color: var(--green); box-shadow: 0 0 0 1px var(--green) inset; }
+  .avatar {
+    width: 56px; height: 56px; border-radius: 16px; display: grid; place-items: center;
+    font-size: 30px; margin-bottom: 6px;
+  }
+  .card h3 { margin: 0; font-size: 21px; line-height: 1.2; word-break: break-word; }
+  .meta { color: var(--muted); font-size: 15px; }
+  .meta b { color: var(--text); font-weight: 700; }
+  .barrio-tag {
+    display: inline-block; font-size: 13px; padding: 2px 10px; border-radius: 999px;
+    background: rgba(255,255,255,.07); color: var(--orange2); margin-top: 2px; align-self: flex-start;
+  }
+  .card .vote {
+    margin-top: auto; font: inherit; font-weight: 800; cursor: pointer; padding: 10px; border-radius: 12px;
+    border: 1px solid var(--orange); background: transparent; color: var(--orange2); transition: .15s;
+  }
+  .card .vote:hover:not(:disabled) { background: var(--orange); color: #2a1200; }
+  .card.voted .vote { background: var(--green); border-color: var(--green); color: #0b2a14; }
+  .card .vote:disabled { cursor: default; opacity: .75; }
+  .count { position: absolute; top: 16px; right: 16px; font-weight: 900; color: var(--muted); font-size: 14px; }
+  .spacer { height: 10px; }
+  .empty { text-align: center; color: var(--muted); padding: 40px 0; font-size: 18px; }
+
+  /* Ranking */
+  .podium { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; align-items: end; margin-bottom: 26px; }
+  .step {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius) var(--radius) 8px 8px;
+    text-align: center; padding: 16px 10px; min-width: 0;
+  }
+  .step .medal { font-size: 38px; }
+  .step h3 { margin: 6px 0 2px; font-size: 17px; word-break: break-word; }
+  .step .meta { font-size: 13px; }
+  .step .votes { font-weight: 900; font-size: 22px; color: var(--orange2); margin-top: 6px; }
+  .step.p1 { padding-top: 34px; border-color: #ffd36b; }
+  .step.p2 { padding-top: 22px; }
+  .rank-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .rank-list li {
+    display: grid; grid-template-columns: 36px 1fr auto; gap: 10px; align-items: center;
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px;
+  }
+  .pos { font-weight: 900; color: var(--muted); text-align: center; }
+  .bar { height: 6px; border-radius: 6px; background: var(--line); margin-top: 6px; overflow: hidden; }
+  .bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--orange), var(--pink)); }
+  .rank-list .votes { font-weight: 900; color: var(--orange2); }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(120px);
+    background: var(--text); color: var(--bg); font-weight: 800; padding: 12px 20px; border-radius: 999px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.4); transition: transform .3s, opacity .3s; opacity: 0; z-index: 20; max-width: calc(100% - 32px); text-align: center;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  .toast.error { background: var(--pink); color: #fff; }
+
+  .bats { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+  .bats span { position: absolute; top: -20px; width: 8px; height: 14px; border-radius: 2px; opacity: .55; animation: fall linear infinite; }
+  @keyframes fall { to { transform: translateY(110vh) rotate(540deg); } }
+  .wrap { position: relative; z-index: 1; }
+
+  footer { text-align: center; color: var(--muted); font-size: 14px; margin-top: 40px; }
+
+  @media (max-width: 520px) {
+    .form-card { padding: 22px 18px; }
+    .podium { gap: 6px; }
+    .step .medal { font-size: 30px; }
+  }
+</style>
+</head>
+<body>
+<div class="bats" aria-hidden="true">
+  <span style="left:8%;background:#ff8a1f;animation-duration:14s"></span>
+  <span style="left:22%;background:#6ec8ff;animation-duration:18s;animation-delay:-6s"></span>
+  <span style="left:41%;background:#ffd36b;animation-duration:16s;animation-delay:-11s"></span>
+  <span style="left:63%;background:#ff5c8a;animation-duration:20s;animation-delay:-3s"></span>
+  <span style="left:79%;background:#7cf29a;animation-duration:15s;animation-delay:-9s"></span>
+  <span style="left:93%;background:#c08bff;animation-duration:19s;animation-delay:-14s"></span>
+</div>
+
+<div class="wrap">
+  <header>
+    <div class="moon">🎭</div>
+    <h1 id="title">Fiesta de Disfraces</h1>
+    <p class="subtitle">Estaca Osorno · Inscribe tu disfraz y vota por tu favorito</p>
+  </header>
+
+  <nav>
+    <button data-tab="votar" class="active">🗳️ Votar</button>
+    <button data-tab="inscribirse">✍️ Inscribirme</button>
+    <button data-tab="ranking">🏆 Ranking</button>
+  </nav>
+
+  <div id="demo" class="notice" hidden>
+    Modo demostración: los datos solo se guardan en este navegador. Pega la URL de tu Apps Script en <code>API_URL</code> para usar Google Sheets.
+  </div>
+
+  <section id="votar" class="panel active">
+    <div id="voteNotice" class="notice" hidden></div>
+    <div class="toolbar">
+      <input id="search" type="search" placeholder="Buscar por disfraz, nombre o barrio…" autocomplete="off">
+    </div>
+    <div id="chips" class="chips"></div>
+    <div id="grid" class="grid"></div>
+  </section>
+
+  <section id="inscribirse" class="panel">
+    <form id="form" class="form-card" autocomplete="on">
+      <h2>Inscribe tu disfraz</h2>
+      <p>Solo te pedimos tres datos y ya estás participando.</p>
+      <label for="name">Nombre</label>
+      <input id="name" name="name" required maxlength="60" placeholder="Ej. Lucía Pérez">
+      <label for="costume">Disfraz</label>
+      <input id="costume" name="costume" required maxlength="80" placeholder="Ej. Superhéroe">
+      <label for="barrio">Barrio o rama</label>
+      <select id="barrio" name="barrio" required>
+        <option value="" disabled selected>Elige tu barrio o rama…</option>
+      </select>
+      <button class="btn" type="submit">¡Inscribirme! 🎭</button>
+    </form>
+  </section>
+
+  <section id="ranking" class="panel">
+    <div id="podium" class="podium"></div>
+    <ol id="rankList" class="rank-list"></ol>
+  </section>
+
+  <footer>Actividad de la Estaca Osorno · Hecho con 🧡 para la fiesta</footer>
+</div>
+
+<div id="toast" class="toast" role="status"></div>
+
+<script>
+  // ⬇️ Pega aquí la URL de tu aplicación web de Google Apps Script (termina en /exec).
+  //    Si la dejas vacía, la página funciona en modo demostración (datos locales).
+  const API_URL = '';
+
+  const EMOJIS = ['🎭','🦸','🤠','👑','🦁','🐻','🚀','🧸','🦄','🐝','🌟','🎩','🐼','🦊','🐸','🦕','🎈','🤖'];
+
+  // Barrios y ramas de la Estaca Osorno (mismo orden que en Code.gs).
+  const BARRIOS = [
+    'Barrio La Unión', 'Barrio Antillanca', 'Barrio Centro', 'Barrio Ecuador', 'Barrio Franke',
+    'Rama Lago Ranco', 'Rama Caupolicán', 'Rama Entre Lagos', 'Rama Río Bueno', 'Rama San Pablo',
+  ];
+  const COLORS = ['#ff8a1f','#ff5c8a','#7cf29a','#6ec8ff','#c08bff','#ffd36b'];
+
+  const $ = s => document.querySelector(s);
+  const state = { costumes: [], config: {}, myVote: null, filter: '', barrio: '' };
+
+  const voterId = (() => {
+    let id = null;
+    try { id = localStorage.getItem('fd_voter'); } catch (e) {}
+    if (!id) {
+      id = (crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2) + Date.now());
+      try { localStorage.setItem('fd_voter', id); } catch (e) {}
+    }
+    return id;
+  })();
+
+  // ---------- API (Apps Script o demo local) ----------
+  const api = API_URL ? {
+    async list() {
+      const r = await fetch(`${API_URL}?action=list&voterId=${encodeURIComponent(voterId)}`);
+      return r.json();
+    },
+    async post(body) {
+      // text/plain evita la petición CORS previa que Apps Script no admite.
+      const r = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ ...body, voterId }),
+      });
+      return r.json();
+    },
+  } : demoApi();
+
+  function demoApi() {
+    $('#demo').hidden = false;
+    const load = () => {
+      try { return JSON.parse(localStorage.getItem('fd_demo')) || null; } catch (e) { return null; }
+    };
+    const save = db => { try { localStorage.setItem('fd_demo', JSON.stringify(db)); } catch (e) {} };
+    let db = load() || {
+      costumes: [
+        { id: 'a1', name: 'Marta', costume: 'Abeja reina', barrio: 'Barrio Centro', autor: 'x' },
+        { id: 'a2', name: 'Jorge', costume: 'Astronauta perdido', barrio: 'Rama Río Bueno', autor: 'y' },
+        { id: 'a3', name: 'Sofía', costume: 'Princesa guerrera', barrio: 'Barrio Franke', autor: 'z' },
+        { id: 'a4', name: 'Andrés', costume: 'Vaquero del sur', barrio: 'Barrio La Unión', autor: 'w' },
+      ],
+      votes: { x: 'a3', y: 'a3', z: 'a2', w: 'a1', q: 'a3' },
+    };
+    return {
+      async list() {
+        const counts = {};
+        Object.values(db.votes).forEach(id => counts[id] = (counts[id] || 0) + 1);
+        return {
+          ok: true,
+          config: { inscripcion_abierta: true, votacion_abierta: true, mostrar_resultados: true },
+          myVote: db.votes[voterId] || null,
+          costumes: db.costumes.map(c => ({ ...c, mine: c.autor === voterId, votes: counts[c.id] || 0 })),
+        };
+      },
+      async post(body) {
+        if (body.action === 'register') {
+          db.costumes.push({ id: Math.random().toString(36).slice(2, 10), name: body.name, costume: body.costume, barrio: body.barrio, autor: voterId });
+        } else if (body.action === 'vote') {
+          const c = db.costumes.find(c => c.id === body.costumeId);
+          if (c && c.autor === voterId) return { ok: false, error: 'No puedes votar por tu propio disfraz 😉' };
+          db.votes[voterId] = body.costumeId;
+        }
+        save(db);
+        return { ok: true };
+      },
+    };
+  }
+
+  // ---------- Utilidades ----------
+  function hash(str) { let h = 0; for (const ch of str) h = (h * 31 + ch.charCodeAt(0)) | 0; return Math.abs(h); }
+  function esc(s) { return String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+  function norm(s) { return String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim(); }
+  function avatar(c) {
+    const h = hash(c.id + c.costume);
+    const color = COLORS[h % COLORS.length];
+    return `<div class="avatar" style="background:${color}22;border:1px solid ${color}55">${EMOJIS[h % EMOJIS.length]}</div>`;
+  }
+  $('#barrio').insertAdjacentHTML('beforeend', BARRIOS.map(b => `<option>${esc(b)}</option>`).join(''));
+
+  let toastTimer;
+  function toast(msg, error = false) {
+    const t = $('#toast');
+    t.textContent = msg; t.className = 'toast show' + (error ? ' error' : '');
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => t.className = 'toast', 3000);
+  }
+  function showTab(name) {
+    document.querySelectorAll('nav button').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+    document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === name));
+  }
+
+  // ---------- Render ----------
+  function render() {
+    const { costumes, config, myVote } = state;
+    if (config.titulo) { $('#title').textContent = config.titulo; document.title = config.titulo; }
+
+    const notice = $('#voteNotice');
+    notice.hidden = config.votacion_abierta !== false;
+    notice.textContent = '🔒 La votación está cerrada.';
+
+    const used = new Set(costumes.map(c => c.barrio));
+    const barrios = BARRIOS.filter(b => used.has(b));
+    $('#chips').innerHTML = barrios.length > 1
+      ? [`<button class="chip ${state.barrio ? '' : 'active'}" data-barrio="">Todos</button>`]
+          .concat(barrios.map(b => `<button class="chip ${state.barrio === b ? 'active' : ''}" data-barrio="${esc(b)}">${esc(b)}</button>`)).join('')
+      : '';
+
+    const q = norm(state.filter);
+    const list = costumes.filter(c =>
+      (!state.barrio || c.barrio === state.barrio) &&
+      (!q || norm(`${c.costume} ${c.name} ${c.barrio}`).includes(q)));
+
+    const closed = config.votacion_abierta === false;
+    $('#grid').innerHTML = list.length ? list.map(c => {
+      const voted = myVote === c.id;
+      const label = c.mine ? 'Es tu disfraz' : voted ? '✓ Tu voto' : closed ? 'Votación cerrada' : 'Votar 🗳️';
+      return `<article class="card ${voted ? 'voted' : ''}">
+        ${c.votes != null ? `<span class="count">${c.votes} ${c.votes === 1 ? 'voto' : 'votos'}</span>` : ''}
+        ${avatar(c)}
+        <h3>${esc(c.costume)}</h3>
+        <div class="meta">por <b>${esc(c.name)}</b></div>
+        ${c.barrio ? `<span class="barrio-tag">📍 ${esc(c.barrio)}</span>` : ''}
+        <div class="spacer"></div>
+        <button class="vote" data-id="${esc(c.id)}" ${c.mine || voted || closed ? 'disabled' : ''}>${label}</button>
+      </article>`;
+    }).join('') : `<div class="empty">${costumes.length ? 'No hay disfraces que coincidan.' : 'Aún no hay disfraces inscritos. ¡Sé el primero! 🎭'}</div>`;
+
+    renderRanking();
+  }
+
+  function renderRanking() {
+    const { costumes, config } = state;
+    if (config.mostrar_resultados === false) {
+      $('#podium').innerHTML = '';
+      $('#rankList').innerHTML = `<li style="display:block;text-align:center">🤫 Los resultados se mostrarán al final de la fiesta.</li>`;
+      return;
+    }
+    const sorted = [...costumes].sort((a, b) => (b.votes || 0) - (a.votes || 0) || a.costume.localeCompare(b.costume, 'es'));
+    if (!sorted.length) { $('#podium').innerHTML = ''; $('#rankList').innerHTML = `<li style="display:block;text-align:center">Todavía no hay participantes.</li>`; return; }
+    const max = Math.max(1, sorted[0].votes || 0);
+    const top = sorted.slice(0, 3);
+    const order = [top[1], top[0], top[2]];
+    const medals = { 0: '🥇', 1: '🥈', 2: '🥉' };
+    $('#podium').innerHTML = order.map(c => {
+      if (!c) return '<div></div>';
+      const i = top.indexOf(c);
+      return `<div class="step p${i + 1}">
+        <div class="medal">${medals[i]}</div>
+        <h3>${esc(c.costume)}</h3>
+        <div class="meta">${esc(c.name)} · ${esc(c.barrio)}</div>
+        <div class="votes">${c.votes || 0}</div>
+      </div>`;
+    }).join('');
+    $('#rankList').innerHTML = sorted.slice(3).map((c, i) => `<li>
+      <span class="pos">${i + 4}</span>
+      <div><b>${esc(c.costume)}</b> <span class="meta">· ${esc(c.name)} · ${esc(c.barrio)}</span>
+        <div class="bar"><span style="width:${((c.votes || 0) / max) * 100}%"></span></div></div>
+      <span class="votes">${c.votes || 0}</span>
+    </li>`).join('');
+  }
+
+  // ---------- Acciones ----------
+  async function refresh() {
+    try {
+      const res = await api.list();
+      if (!res.ok) throw new Error(res.error);
+      Object.assign(state, { costumes: res.costumes, config: res.config || {}, myVote: res.myVote });
+      render();
+    } catch (err) {
+      $('#grid').innerHTML = `<div class="empty">No se pudo cargar la lista 😕<br><small>${esc(err.message)}</small></div>`;
+    }
+  }
+
+  document.querySelector('nav').addEventListener('click', e => {
+    const b = e.target.closest('button[data-tab]');
+    if (b) { showTab(b.dataset.tab); if (b.dataset.tab !== 'inscribirse') refresh(); }
+  });
+  $('#search').addEventListener('input', e => { state.filter = e.target.value; render(); });
+  $('#chips').addEventListener('click', e => {
+    const b = e.target.closest('.chip'); if (!b) return;
+    state.barrio = b.dataset.barrio; render();
+  });
+
+  $('#grid').addEventListener('click', async e => {
+    const b = e.target.closest('.vote'); if (!b || b.disabled) return;
+    const changing = !!state.myVote;
+    b.disabled = true; b.textContent = 'Enviando…';
+    try {
+      const res = await api.post({ action: 'vote', costumeId: b.dataset.id });
+      if (!res.ok) throw new Error(res.error);
+      toast(changing ? '¡Voto cambiado! 🔁' : '¡Gracias por votar! 🎉');
+      await refresh();
+    } catch (err) { toast(err.message || 'No se pudo votar', true); render(); }
+  });
+
+  $('#form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const f = e.target, btn = f.querySelector('button');
+    if (state.config.inscripcion_abierta === false) return toast('Las inscripciones están cerradas.', true);
+    const data = { action: 'register', name: f.elements.name.value.trim(), costume: f.elements.costume.value.trim(), barrio: f.elements.barrio.value.trim() };
+    if (!data.name || !data.costume || !data.barrio) return toast('Rellena los tres campos 🙏', true);
+    btn.disabled = true; btn.textContent = 'Inscribiendo…';
+    try {
+      const res = await api.post(data);
+      if (!res.ok) throw new Error(res.error);
+      f.reset();
+      toast('¡Estás inscrito! Mucha suerte 🍀');
+      await refresh();
+      showTab('votar');
+    } catch (err) { toast(err.message || 'No se pudo inscribir', true); }
+    finally { btn.disabled = false; btn.textContent = '¡Inscribirme! 🎭'; }
+  });
+
+  refresh();
+  setInterval(() => { if (!document.hidden) refresh(); }, 30000);
+</script>
+</body>
+</html>
