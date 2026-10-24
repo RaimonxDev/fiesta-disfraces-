@@ -29,17 +29,19 @@ El barrio o rama se elige de una lista con las unidades de la Estaca Osorno. Si 
 
 > Si más adelante cambias `Code.gs`, ve a **Implementar → Gestionar implementaciones → ✏️ → Versión: Nueva versión → Implementar**. Así la URL no cambia.
 
-## 3. Conectar la página
+## 3. Publicar la página en Vercel
 
-Primero activa GitHub Pages (solo una vez):
+Como ya tienes proyectos en Vercel, se hace en un par de minutos:
 
-1. En el repositorio, ve a **Settings → Pages**.
-2. En **Branch** elige `main` y carpeta `/ (root)`, y pulsa **Save**.
-3. En uno o dos minutos la página estará en **https://raimonxdev.github.io/fiesta-disfraces-/** y se actualizará sola con cada cambio.
+1. En [vercel.com](https://vercel.com) pulsa **Add New → Project** e importa el repositorio `fiesta-disfraces-`.
+2. En *Framework Preset* deja **Other** (no hay nada que compilar) y pulsa **Deploy**.
+3. Para una URL más amigable, ve a **Settings → Domains**, edita el dominio `.vercel.app` y pon el nombre que quieras, por ejemplo `fiesta-estaca-osorno.vercel.app`.
 
-> Con una cuenta gratuita de GitHub, Pages solo funciona si el repositorio es **público**.
+Cada cambio que se suba a la rama `main` se publica solo.
 
-Después pega la URL del paso 2:
+## 4. Conectar la página con el Google Sheet
+
+Pega la URL del paso 2 en la página:
 
 1. En GitHub abre el archivo `index.html` y pulsa el lápiz ✏️ (editar).
 2. Busca esta línea y pega tu URL entre las comillas:
@@ -47,7 +49,7 @@ Después pega la URL del paso 2:
    ```js
    const API_URL = 'https://script.google.com/macros/s/XXXXXXXX/exec';
    ```
-3. Pulsa **Commit changes**. En uno o dos minutos la web ya usa tu Google Sheet.
+3. Pulsa **Commit changes**. Vercel la vuelve a publicar en menos de un minuto y la web ya usa tu Google Sheet.
 
 Mientras `API_URL` esté vacía, la página funciona en **modo demostración** (datos de ejemplo guardados solo en tu navegador).
 
