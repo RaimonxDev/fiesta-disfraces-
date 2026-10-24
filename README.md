@@ -55,6 +55,21 @@ Mientras `API_URL` esté vacía, la página funciona en **modo demostración** (
 
 Comparte el enlace (o un código QR con él) en la actividad.
 
+## Votar desde un computador compartido (personas sin teléfono)
+
+Abre la página añadiendo `?kiosco=1` al final de la dirección, por ejemplo:
+
+`https://tu-proyecto.vercel.app/?kiosco=1`
+
+En este modo:
+
+- La letra y los botones son más grandes.
+- Antes de votar se pide confirmar (**Sí, votar** / **No, volver**) para evitar equivocaciones.
+- Después de cada voto aparece **¡Gracias por votar!** y la pantalla se reinicia sola a los 5 segundos para la siguiente persona.
+- Cada persona cuenta como un voto distinto. En la pestaña **Votos** del Sheet, los votos hechos en ese computador empiezan por `kiosco-`.
+
+Como en este modo se puede votar varias veces, conviene que alguien acompañe el computador.
+
 ## Controlar el concurso desde el Sheet
 
 En la pestaña **Config** puedes cambiar estos valores (TRUE / FALSE) y la web lo refleja al recargar:

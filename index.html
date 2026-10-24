@@ -174,6 +174,43 @@
   @keyframes fall { to { transform: translateY(110vh) rotate(540deg); } }
   .wrap { position: relative; z-index: 1; }
 
+  /* Modo PC compartido (kiosco): letra y botones grandes */
+  body.kiosco { font-size: 20px; }
+  body.kiosco .wrap { max-width: 1200px; }
+  body.kiosco nav button { font-size: 22px; padding: 14px 26px; }
+  body.kiosco .grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+  body.kiosco .card h3 { font-size: 30px; }
+  body.kiosco .meta { font-size: 21px; }
+  body.kiosco .barrio-tag { font-size: 18px; }
+  body.kiosco .count { font-size: 18px; }
+  body.kiosco .avatar { width: 72px; height: 72px; font-size: 40px; }
+  body.kiosco .card .vote { font-size: 24px; padding: 18px; border-width: 2px; }
+  body.kiosco input, body.kiosco select, body.kiosco .btn { font-size: 22px; padding: 16px 18px; }
+  body.kiosco .chip { font-size: 18px; padding: 10px 16px; }
+  .kiosk-bar {
+    display: none; text-align: center; font-size: 22px; font-weight: 800; margin: 0 0 20px;
+    padding: 16px; border-radius: 14px; background: rgba(110, 200, 255, .12); border: 1px solid #6ec8ff; color: #cfeeff;
+  }
+  body.kiosco .kiosk-bar { display: block; }
+  .overlay {
+    position: fixed; inset: 0; z-index: 30; display: none; place-items: center; padding: 16px;
+    background: rgba(10, 12, 35, .85); backdrop-filter: blur(4px);
+  }
+  .overlay.show { display: grid; animation: fade .2s ease; }
+  .dialog {
+    width: min(640px, 100%); background: var(--card); border: 1px solid var(--line); border-radius: 24px;
+    padding: 32px 24px; text-align: center; box-shadow: 0 30px 80px rgba(0,0,0,.5);
+  }
+  .dialog .big { font-size: 64px; line-height: 1; }
+  .dialog h2 { font-size: 32px; margin: 16px 0 8px; word-break: break-word; }
+  .dialog p { font-size: 22px; color: var(--muted); margin: 0 0 24px; }
+  .dialog .actions { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+  .dialog .actions button {
+    font: inherit; font-size: 24px; font-weight: 900; cursor: pointer; border-radius: 16px; padding: 18px 28px; flex: 1 1 200px;
+  }
+  .dialog .yes { border: 0; background: var(--green); color: #0b2a14; }
+  .dialog .no { border: 2px solid var(--line); background: transparent; color: var(--text); }
+
   footer { text-align: center; color: var(--muted); font-size: 14px; margin-top: 40px; }
 
   @media (max-width: 520px) {
@@ -211,6 +248,7 @@
   </div>
 
   <section id="votar" class="panel active">
+    <div class="kiosk-bar">🖥️ Computador compartido: elige un disfraz y pulsa <b>Votar</b>. Después la pantalla queda lista para la siguiente persona.</div>
     <div id="voteNotice" class="notice" hidden></div>
     <div class="toolbar">
       <input id="search" type="search" placeholder="Buscar por disfraz, nombre o barrio…" autocomplete="off">
@@ -245,6 +283,10 @@
 
 <div id="toast" class="toast" role="status"></div>
 
+<div id="overlay" class="overlay" role="dialog" aria-modal="true">
+  <div class="dialog" id="dialog"></div>
+</div>
+
 <script>
   // ⬇️ Pega aquí la URL de tu aplicación web de Google Apps Script (termina en /exec).
   //    Si la dejas vacía, la página funciona en modo demostración (datos locales).
@@ -262,11 +304,16 @@
   const $ = s => document.querySelector(s);
   const state = { costumes: [], config: {}, myVote: null, filter: '', barrio: '' };
 
-  const voterId = (() => {
+  // Modo PC compartido: abre la página con ?kiosco=1. Cada persona que vota recibe un
+  // identificador nuevo, así varias personas pueden votar desde el mismo computador.
+  const KIOSCO = new URLSearchParams(location.search).has('kiosco');
+  if (KIOSCO) document.body.classList.add('kiosco');
+  const newId = () => (crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2) + Date.now());
+  let voterId = KIOSCO ? 'kiosco-' + newId() : (() => {
     let id = null;
     try { id = localStorage.getItem('fd_voter'); } catch (e) {}
     if (!id) {
-      id = (crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2) + Date.now());
+      id = newId();
       try { localStorage.setItem('fd_voter', id); } catch (e) {}
     }
     return id;
@@ -443,13 +490,53 @@
     state.barrio = b.dataset.barrio; render();
   });
 
+  function dialog(html) {
+    $('#dialog').innerHTML = html;
+    $('#overlay').classList.add('show');
+  }
+  function closeDialog() { $('#overlay').classList.remove('show'); }
+
+  function confirmVote(c) {
+    return new Promise(resolve => {
+      dialog(`<div class="big">🗳️</div>
+        <h2>¿Votar por «${esc(c.costume)}»?</h2>
+        <p>de ${esc(c.name)} · ${esc(c.barrio)}</p>
+        <div class="actions">
+          <button class="no" data-a="no">No, volver</button>
+          <button class="yes" data-a="yes">Sí, votar</button>
+        </div>`);
+      $('#dialog').onclick = e => {
+        const a = e.target.closest('button')?.dataset.a; if (!a) return;
+        closeDialog(); resolve(a === 'yes');
+      };
+    });
+  }
+
+  // Tras votar en modo kiosco: agradecer y dejar la pantalla lista para otra persona.
+  function nextPerson() {
+    voterId = 'kiosco-' + newId();
+    state.filter = ''; state.barrio = ''; $('#search').value = '';
+    let left = 5;
+    const tick = () => dialog(`<div class="big">🎉</div>
+      <h2>¡Gracias por votar!</h2>
+      <p>Tu voto quedó registrado.<br>La pantalla se reinicia en ${left}…</p>
+      <div class="actions"><button class="yes" data-a="ok">Siguiente persona</button></div>`);
+    tick();
+    const done = () => { clearInterval(timer); closeDialog(); showTab('votar'); window.scrollTo(0, 0); refresh(); };
+    const timer = setInterval(() => { if (--left <= 0) done(); else tick(); }, 1000);
+    $('#dialog').onclick = e => { if (e.target.closest('button')) done(); };
+  }
+
   $('#grid').addEventListener('click', async e => {
     const b = e.target.closest('.vote'); if (!b || b.disabled) return;
+    const costume = state.costumes.find(c => c.id === b.dataset.id);
+    if (KIOSCO && !(await confirmVote(costume))) return;
     const changing = !!state.myVote;
     b.disabled = true; b.textContent = 'Enviando…';
     try {
       const res = await api.post({ action: 'vote', costumeId: b.dataset.id });
       if (!res.ok) throw new Error(res.error);
+      if (KIOSCO) return nextPerson();
       toast(changing ? '¡Voto cambiado! 🔁' : '¡Gracias por votar! 🎉');
       await refresh();
     } catch (err) { toast(err.message || 'No se pudo votar', true); render(); }
@@ -467,6 +554,7 @@
       if (!res.ok) throw new Error(res.error);
       f.reset();
       toast('¡Estás inscrito! Mucha suerte 🍀');
+      if (KIOSCO) voterId = 'kiosco-' + newId();
       await refresh();
       showTab('votar');
     } catch (err) { toast(err.message || 'No se pudo inscribir', true); }
