@@ -31,9 +31,15 @@ El barrio o rama se elige de una lista con las unidades de la Estaca Osorno. Si 
 
 ## 3. Conectar la página
 
-La página ya está publicada en **https://raimonxdev.github.io/fiesta-disfraces-/** (GitHub Pages, se actualiza sola con cada cambio en la rama `main`).
+Primero activa GitHub Pages (solo una vez):
 
-Solo falta pegar la URL del paso 2:
+1. En el repositorio, ve a **Settings → Pages**.
+2. En **Branch** elige `main` y carpeta `/ (root)`, y pulsa **Save**.
+3. En uno o dos minutos la página estará en **https://raimonxdev.github.io/fiesta-disfraces-/** y se actualizará sola con cada cambio.
+
+> Con una cuenta gratuita de GitHub, Pages solo funciona si el repositorio es **público**.
+
+Después pega la URL del paso 2:
 
 1. En GitHub abre el archivo `index.html` y pulsa el lápiz ✏️ (editar).
 2. Busca esta línea y pega tu URL entre las comillas:
